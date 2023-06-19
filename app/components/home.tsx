@@ -3,7 +3,6 @@
 require("../polyfill");
 
 import { useState, useEffect } from "react";
-
 import styles from "./home.module.scss";
 
 import BotIcon from "../icons/bot.svg";
@@ -14,18 +13,19 @@ import { getCSSVar, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
-
+import { redirectIfNotAuthenticated } from "../utils/auth";
+import Login from "./login";
 import {
   HashRouter as Router,
   Routes,
   Route,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
 import { AuthPage } from "./auth";
 import { getClientConfig } from "../config/client";
-
 export function Loading(props: { noLogo?: boolean }) {
   return (
     <div className={styles["loading-content"] + " no-dark"}>
@@ -110,12 +110,37 @@ function Screen() {
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const isLogin = redirectIfNotAuthenticated();
   const isMobileScreen = useMobileScreen();
-
+  const navigate = useNavigate();
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
+  // useEffect(() => {
+  //   if (!redirectIfNotAuthenticated()) {
+  //     // 如果用户未登录，则跳转到登录页面
+  //     navigate('/login');
+  //   }
+  //   console.log('Current location:', location.pathname);
+  // }, [location]);
 
+  // useEffect(() => {
+  //   // 当路由变化时执行此函数
+  //   const handleRouteChange = (location) => {
+  //     if (!redirectIfNotAuthenticated()) {
+  //       // 如果用户未登录，则跳转到登录页面
+  //       navigate(Path.Login);
+  //     }
+  //   };
+
+  //   // 监听路由变化
+  //   const unlisten = navigate.subc(handleRouteChange);
+
+  //   // 在组件销毁时取消监听
+  //   return () => {
+  //     unlisten();
+  //   };
+  // }, []);
   return (
     <div
       className={
@@ -127,24 +152,31 @@ function Screen() {
         }`
       }
     >
-      {isAuth ? (
+      {isLogin ? (
         <>
-          <AuthPage />
+          {" "}
+          {isAuth ? (
+            <>
+              <AuthPage />
+            </>
+          ) : (
+            <>
+              <SideBar className={isHome ? styles["sidebar-show"] : ""} />
+
+              <div className={styles["window-content"]} id={SlotID.AppBody}>
+                <Routes>
+                  <Route path={Path.Home} element={<Chat />} />
+                  <Route path={Path.NewChat} element={<NewChat />} />
+                  <Route path={Path.Masks} element={<MaskPage />} />
+                  <Route path={Path.Chat} element={<Chat />} />
+                  <Route path={Path.Settings} element={<Settings />} />
+                </Routes>
+              </div>
+            </>
+          )}
         </>
       ) : (
-        <>
-          <SideBar className={isHome ? styles["sidebar-show"] : ""} />
-
-          <div className={styles["window-content"]} id={SlotID.AppBody}>
-            <Routes>
-              <Route path={Path.Home} element={<Chat />} />
-              <Route path={Path.NewChat} element={<NewChat />} />
-              <Route path={Path.Masks} element={<MaskPage />} />
-              <Route path={Path.Chat} element={<Chat />} />
-              <Route path={Path.Settings} element={<Settings />} />
-            </Routes>
-          </div>
-        </>
+        <Login />
       )}
     </div>
   );
