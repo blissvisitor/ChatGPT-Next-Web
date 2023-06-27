@@ -277,6 +277,30 @@ const cn = {
     Create: "新建",
     Edit: "编辑",
   },
+  LOGIN: {
+    Title: "登录",
+    Email: "邮箱",
+    Password: " 密码",
+    Login: " 登录",
+    Register: " 注册",
+    NotExist: " 用户不存在",
+    WrongPWD: " 密码错误",
+    NotHaveAccount: "没有账号？",
+    Success: "登录成功",
+    Failed: "登录失败",
+  },
+  REGISTER: {
+    Title: "注册",
+    Email: "邮箱",
+    UserName: "用户名",
+    Password: " 密码",
+    Login: " 登录",
+    Register: " 注册",
+    Exist: " 用户已存在",
+    HaveAccount: "已有账号？",
+    Success: "注册成功",
+    Failed: "注册失败",
+  },
 };
 
 type DeepPartial<T> = T extends object

@@ -1,29 +1,34 @@
 // login.tsx
+import Locale from "../locales";
 
+import { IconButton } from "../components/button";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useUserStore } from "../store/user";
 // import { authenticateUser } from '../api/auth';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { NextResponse } from "next/server";
 const LoginPage = () => {
-  //   const router = useRouter();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleLogin = async () => {
+  const useStore = useUserStore();
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
     try {
-      //   await authenticateUser(email, password);
-      //   router.push('/');
+      await useStore.login(email, password);
+      navigate("/");
     } catch (error) {
       console.error(error);
+      return NextResponse.error();
     }
   };
 
   return (
     <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
+      <h1>{Locale.LOGIN.Title}</h1>
+      <form>
         <label>
-          Email:
+          {Locale.LOGIN.Email}:
           <input
             type="email"
             value={email}
@@ -31,17 +36,27 @@ const LoginPage = () => {
           />
         </label>
         <label>
-          Password:
+          {Locale.LOGIN.Password}:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button type="submit">Login</button>
+        <IconButton
+          bordered
+          text={Locale.LOGIN.Title}
+          title={Locale.LOGIN.Title}
+          type="primary"
+          onClick={(event) => {
+            handleLogin(event);
+          }}
+        />
+        {/* <button type="submit">Login</button> */}
       </form>
       <p>
-        Do not have an account? <Link to="/register">Register</Link>
+        {Locale.LOGIN.NotHaveAccount}?{" "}
+        <Link to="/register">{Locale.LOGIN.Register}</Link>
       </p>
     </div>
   );

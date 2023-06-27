@@ -1,19 +1,24 @@
 // register.tsx
+import Locale from "../locales";
+import { IconButton } from "../components/button";
 
 import { useState } from "react";
-import { useRouter } from "next/router";
-// import { registerUser } from '../api/auth';
-
+import { useUserStore } from "../store/user";
+import { Link, useNavigate } from "react-router-dom";
+import { Path } from "../constant";
 const RegisterPage = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [message, setMessage] = useState("");
+  const useStore = useUserStore();
   const handleRegister = async () => {
     try {
-      //   await registerUser(email, username, password);
-      router.push("/login");
+      await useStore.register(email, username, password);
+      setMessage("Registration successful!");
+      navigate(Path.Login);
     } catch (error) {
       console.error(error);
     }
@@ -21,10 +26,11 @@ const RegisterPage = () => {
 
   return (
     <div>
-      <h1>Register</h1>
-      <form onSubmit={handleRegister}>
+      <h1>{Locale.REGISTER.Title}</h1>
+      {message && <p>{message}</p>}
+      <form>
         <label>
-          Email:
+          {Locale.REGISTER.Email}:
           <input
             type="email"
             value={email}
@@ -32,7 +38,7 @@ const RegisterPage = () => {
           />
         </label>
         <label>
-          Username:
+          {Locale.REGISTER.UserName}:
           <input
             type="text"
             value={username}
@@ -40,15 +46,27 @@ const RegisterPage = () => {
           />
         </label>
         <label>
-          Password:
+          {Locale.REGISTER.Password}:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button type="submit">Register</button>
+        <IconButton
+          bordered
+          text={Locale.REGISTER.Title}
+          title={Locale.REGISTER.Title}
+          type="primary"
+          onClick={() => {
+            handleRegister();
+          }}
+        />
       </form>
+      <p>
+        {Locale.REGISTER.HaveAccount}?{" "}
+        <Link to="/login">{Locale.REGISTER.Login}</Link>
+      </p>
     </div>
   );
 };

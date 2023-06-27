@@ -280,6 +280,30 @@ const en: LocaleType = {
     Create: "Create",
     Edit: "Edit",
   },
+  LOGIN: {
+    Title: "Login",
+    Email: "Email",
+    Password: "Password",
+    Login: "Login",
+    Register: "Register",
+    NotExist: "User does not exist",
+    WrongPWD: " Wrong Password",
+    NotHaveAccount: "Don't have an account?",
+    Success: "Login Success",
+    Failed: "Login Failed",
+  },
+  REGISTER: {
+    Title: "Register",
+    Email: "Email",
+    UserName: "Username",
+    Password: "Password",
+    Login: "Login",
+    Register: "Register",
+    Exist: "User already exists",
+    HaveAccount: "Already have an account?",
+    Success: "Register Success",
+    Failed: "Register Failed",
+  },
 };
 
 export default en;

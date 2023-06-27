@@ -15,6 +15,8 @@ import { Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
 import { redirectIfNotAuthenticated } from "../utils/auth";
 import Login from "./login";
+import Register from "./register";
+import { useUserStore } from "../store/user";
 import {
   HashRouter as Router,
   Routes,
@@ -106,41 +108,27 @@ const loadAsyncGoogleFont = () => {
 };
 
 function Screen() {
+  const navigate = useNavigate();
   const config = useAppConfig();
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
-  const isLogin = redirectIfNotAuthenticated();
+  const useStore = useUserStore();
   const isMobileScreen = useMobileScreen();
-  const navigate = useNavigate();
+  const isLogin = useStore?.user?.isLoggedIn;
+
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
   // useEffect(() => {
-  //   if (!redirectIfNotAuthenticated()) {
+  //   debugger;
+  //   if (!isLogin) {
   //     // 如果用户未登录，则跳转到登录页面
-  //     navigate('/login');
+  //     navigate(Path.Login);
   //   }
-  //   console.log('Current location:', location.pathname);
-  // }, [location]);
+  //   console.log("Current location:", location.pathname);
+  // }, [isLogin,location, navigate]);
 
-  // useEffect(() => {
-  //   // 当路由变化时执行此函数
-  //   const handleRouteChange = (location) => {
-  //     if (!redirectIfNotAuthenticated()) {
-  //       // 如果用户未登录，则跳转到登录页面
-  //       navigate(Path.Login);
-  //     }
-  //   };
-
-  //   // 监听路由变化
-  //   const unlisten = navigate.subc(handleRouteChange);
-
-  //   // 在组件销毁时取消监听
-  //   return () => {
-  //     unlisten();
-  //   };
-  // }, []);
   return (
     <div
       className={
@@ -154,7 +142,6 @@ function Screen() {
     >
       {isLogin ? (
         <>
-          {" "}
           {isAuth ? (
             <>
               <AuthPage />
@@ -170,13 +157,19 @@ function Screen() {
                   <Route path={Path.Masks} element={<MaskPage />} />
                   <Route path={Path.Chat} element={<Chat />} />
                   <Route path={Path.Settings} element={<Settings />} />
+                  <Route path={Path.Auth} element={<AuthPage />} />
                 </Routes>
               </div>
             </>
           )}
         </>
       ) : (
-        <Login />
+        <>
+          <Routes>
+            <Route path={Path.Login} element={<Login />} />
+            <Route path={Path.Register} element={<Register />} />
+          </Routes>
+        </>
       )}
     </div>
   );
@@ -184,7 +177,6 @@ function Screen() {
 
 export function Home() {
   useSwitchTheme();
-
   useEffect(() => {
     console.log("[Config] got config from build time", getClientConfig());
   }, []);

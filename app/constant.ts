@@ -16,6 +16,8 @@ export enum Path {
   Masks = "/masks",
   Auth = "/auth",
   Login = "/login",
+  Register = "/register",
+  Dashboard = "/dashboard",
 }
 
 export enum SlotID {
@@ -34,6 +36,7 @@ export enum StoreKey {
   Mask = "mask-store",
   Prompt = "prompt-store",
   Update = "chat-update",
+  User = "user-store",
 }
 
 export const MAX_SIDEBAR_WIDTH = 500;
