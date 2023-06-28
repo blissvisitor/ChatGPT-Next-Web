@@ -17,6 +17,8 @@ import Login from "./login";
 import Register from "./register";
 import { Dashboard } from "./dashboard";
 
+import { getLang } from "../locales";
+
 import { useUserStore } from "../store/user";
 import {
   HashRouter as Router,
@@ -149,7 +151,7 @@ function Screen() {
           config.tightBorder && !isMobileScreen
             ? styles["tight-container"]
             : styles.container
-        }`
+        } ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
       }
     >
       {isLogin && !isDashboard && (
