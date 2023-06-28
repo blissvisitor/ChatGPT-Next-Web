@@ -13,9 +13,10 @@ import { getCSSVar, useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
-import { redirectIfNotAuthenticated } from "../utils/auth";
 import Login from "./login";
 import Register from "./register";
+import { Dashboard } from "./dashboard";
+
 import { useUserStore } from "../store/user";
 import {
   HashRouter as Router,
@@ -52,6 +53,9 @@ const NewChat = dynamic(async () => (await import("./new-chat")).NewChat, {
 const MaskPage = dynamic(async () => (await import("./mask")).MaskPage, {
   loading: () => <Loading noLogo />,
 });
+// const Dashboard = dynamic(async () => (await import("./dashboard")).Dashboard, {
+//   loading: () => <Loading noLogo />,
+// });
 
 export function useSwitchTheme() {
   const config = useAppConfig();
@@ -113,6 +117,7 @@ function Screen() {
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const isDashboard = location.pathname === Path.Dashboard;
   const useStore = useUserStore();
   const isMobileScreen = useMobileScreen();
   const isLogin = useStore?.user?.isLoggedIn;
@@ -120,14 +125,21 @@ function Screen() {
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
-  // useEffect(() => {
-  //   debugger;
-  //   if (!isLogin) {
-  //     // 如果用户未登录，则跳转到登录页面
-  //     navigate(Path.Login);
-  //   }
-  //   console.log("Current location:", location.pathname);
-  // }, [isLogin,location, navigate]);
+  useEffect(() => {
+    if (
+      !isLogin &&
+      location.pathname !== Path.Login &&
+      location.pathname !== Path.Register &&
+      location.pathname !== Path.Dashboard
+    ) {
+      // 如果用户未登录，则跳转到登录页面
+      navigate(Path.Login);
+    }
+    if (isLogin && location.pathname === Path.Login) {
+      navigate(Path.Home);
+    }
+    console.log("Current location:", location.pathname);
+  }, [isLogin, location, navigate]);
 
   return (
     <div
@@ -140,37 +152,23 @@ function Screen() {
         }`
       }
     >
-      {isLogin ? (
-        <>
-          {isAuth ? (
-            <>
-              <AuthPage />
-            </>
-          ) : (
-            <>
-              <SideBar className={isHome ? styles["sidebar-show"] : ""} />
-
-              <div className={styles["window-content"]} id={SlotID.AppBody}>
-                <Routes>
-                  <Route path={Path.Home} element={<Chat />} />
-                  <Route path={Path.NewChat} element={<NewChat />} />
-                  <Route path={Path.Masks} element={<MaskPage />} />
-                  <Route path={Path.Chat} element={<Chat />} />
-                  <Route path={Path.Settings} element={<Settings />} />
-                  <Route path={Path.Auth} element={<AuthPage />} />
-                </Routes>
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <Routes>
-            <Route path={Path.Login} element={<Login />} />
-            <Route path={Path.Register} element={<Register />} />
-          </Routes>
-        </>
+      {isLogin && !isDashboard && (
+        <SideBar className={isHome ? styles["sidebar-show"] : ""} />
       )}
+
+      <div className={styles["window-content"]} id={SlotID.AppBody}>
+        <Routes>
+          <Route path={Path.Home} element={<Chat />} />
+          <Route path={Path.NewChat} element={<NewChat />} />
+          <Route path={Path.Masks} element={<MaskPage />} />
+          <Route path={Path.Chat} element={<Chat />} />
+          <Route path={Path.Settings} element={<Settings />} />
+          <Route path={Path.Auth} element={<AuthPage />} />
+          <Route path={Path.Dashboard} element={<Dashboard />} />
+          <Route path={Path.Login} element={<Login />} />
+          <Route path={Path.Register} element={<Register />} />
+        </Routes>
+      </div>
     </div>
   );
 }

@@ -43,13 +43,11 @@ export const useUserStore = create<UserState>()(
 
           if (response.ok) {
             const json = await response.json();
-            set({ user: { ...json, isLoggedIn: true } as User });
+            set({ user: { ...json.data, isLoggedIn: true } as User });
             showToast(Locale.LOGIN.Success);
-            //   setMessage("Registration successful!");
-            // navigate(Path.Login);
           } else {
-            console.error("Login failed:", response.statusText);
-            showToast(Locale.LOGIN.Failed);
+            const error = await response.json();
+            showToast(`${Locale.LOGIN.Failed}: ${error.message}`);
           }
         } catch (error) {
           console.error("Registration failed:", error);
@@ -62,10 +60,6 @@ export const useUserStore = create<UserState>()(
       },
       register: async (username: string, email: string, password: string) => {
         // register api call with username, email and password
-        // const response = await fetch(registerUrl, { method: 'POST', body: JSON.stringify({ username, email, password }) })
-        // const json = await response.json();
-        // console.log(json)
-
         try {
           const response = await fetch(registerUrl, {
             method: "POST",
@@ -80,8 +74,8 @@ export const useUserStore = create<UserState>()(
             //   setMessage("Registration successful!");
             // navigate(Path.Login);
           } else {
-            showToast(Locale.REGISTER.Failed);
-            console.error("Registration failed:", response.statusText);
+            const error = await response.json();
+            showToast(`${Locale.REGISTER.Failed}: ${error.message}`);
           }
         } catch (error) {
           console.error("Registration failed:", error);

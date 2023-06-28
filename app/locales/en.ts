@@ -304,6 +304,23 @@ const en: LocaleType = {
     Success: "Register Success",
     Failed: "Register Failed",
   },
+  LOGOUT: {
+    Title: "Logout",
+    Success: "Logout Success",
+    Failed: "Logout Failed",
+  },
+  DASHBOARD: {
+    Title: "Dashboard",
+    UserName: "Username",
+    Email: "Email",
+    Role: "Role",
+    Expire: "Expire",
+    Home: "Home",
+    Store: "Store",
+    Login: "Login",
+    NotLogin: "Not Login",
+    Logout: "Logout",
+  },
 };
 
 export default en;

@@ -301,6 +301,23 @@ const cn = {
     Success: "注册成功",
     Failed: "注册失败",
   },
+  LOGOUT: {
+    Title: "登出",
+    Success: "登出成功",
+    Failed: "登出失败",
+  },
+  DASHBOARD: {
+    Title: "个人中心",
+    UserName: "用户名",
+    Email: "邮箱",
+    Role: "等级",
+    Expire: "过期时间",
+    Home: "主页",
+    Store: "商店",
+    Login: "登录",
+    NotLogin: "未登录",
+    Logout: "登出",
+  },
 };
 
 type DeepPartial<T> = T extends object

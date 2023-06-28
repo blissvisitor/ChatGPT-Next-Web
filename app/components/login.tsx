@@ -1,22 +1,39 @@
 // login.tsx
-import Locale from "../locales";
+import "../styles/login.scss";
 
+import Locale from "../locales";
+import { showToast } from "./ui-lib";
 import { IconButton } from "../components/button";
+import LoginIcon from "../icons/login.svg";
 import { useState } from "react";
 import { useUserStore } from "../store/user";
-// import { authenticateUser } from '../api/auth';
 import { Link, useNavigate } from "react-router-dom";
+import { Path } from "../constant";
 import { NextResponse } from "next/server";
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const useStore = useUserStore();
-  const handleLogin = async (event: any) => {
-    event.preventDefault();
+  const handleLogin = async (event?: React.MouseEvent<HTMLButtonElement>) => {
+    if (event) {
+      event.preventDefault();
+    }
+    if (email === "" || password === "") {
+      setMessage("Please enter your email and password");
+      setTimeout(() => {
+        setMessage("");
+      }, 1500);
+      return;
+    }
     try {
       await useStore.login(email, password);
-      navigate("/");
+      if (useStore.user?.isLoggedIn) {
+        navigate(Path.Dashboard);
+      } else {
+        console.error("Login failed");
+      }
     } catch (error) {
       console.error(error);
       return NextResponse.error();
@@ -24,9 +41,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+    <div className="login">
       <h1>{Locale.LOGIN.Title}</h1>
-      <form>
+      {message && <p style={{ color: "red" }}>{message}</p>}
+      <form className="form">
         <label>
           {Locale.LOGIN.Email}:
           <input
@@ -45,17 +63,15 @@ const LoginPage = () => {
         </label>
         <IconButton
           bordered
+          icon={<LoginIcon />}
           text={Locale.LOGIN.Title}
           title={Locale.LOGIN.Title}
           type="primary"
-          onClick={(event) => {
-            handleLogin(event);
-          }}
+          onClick={handleLogin}
         />
-        {/* <button type="submit">Login</button> */}
       </form>
       <p>
-        {Locale.LOGIN.NotHaveAccount}?{" "}
+        {Locale.LOGIN.NotHaveAccount}
         <Link to="/register">{Locale.LOGIN.Register}</Link>
       </p>
     </div>

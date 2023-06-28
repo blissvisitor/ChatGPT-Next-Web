@@ -1,11 +1,15 @@
 // register.tsx
+
+import "../styles/register.scss";
 import Locale from "../locales";
 import { IconButton } from "../components/button";
+import RegisterIcon from "../icons/register.svg";
 
 import { useState } from "react";
 import { useUserStore } from "../store/user";
 import { Link, useNavigate } from "react-router-dom";
-import { Path } from "../constant";
+
+import { isValidEmail, isValidPassword } from "../utils/format";
 const RegisterPage = () => {
   const navigate = useNavigate();
 
@@ -14,21 +18,43 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const useStore = useUserStore();
-  const handleRegister = async () => {
+  const handleRegister = async (
+    event?: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    if (event) {
+      event.preventDefault();
+    }
+    if (email === "" || username === "" || password === "") {
+      setMessage("Please enter your email, username and password");
+      setTimeout(() => {
+        setMessage("");
+      }, 1500);
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setMessage("Invalid email format");
+      return;
+    }
+
+    if (!isValidPassword(password)) {
+      setMessage("Password must be at least 8 characters long");
+      return;
+    }
     try {
-      await useStore.register(email, username, password);
-      setMessage("Registration successful!");
-      navigate(Path.Login);
+      await useStore.register(username, email, password);
+      // setMessage("Registration successful!");
+      // setTimeout(() => {setMessage("")}, 1500);
+      // navigate(Path.Login);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div>
+    <div className="register">
       <h1>{Locale.REGISTER.Title}</h1>
-      {message && <p>{message}</p>}
-      <form>
+      {message && <p style={{ color: "red" }}>{message}</p>}
+      <form className="form">
         <label>
           {Locale.REGISTER.Email}:
           <input
@@ -55,12 +81,11 @@ const RegisterPage = () => {
         </label>
         <IconButton
           bordered
+          icon={<RegisterIcon />}
           text={Locale.REGISTER.Title}
           title={Locale.REGISTER.Title}
           type="primary"
-          onClick={() => {
-            handleRegister();
-          }}
+          onClick={handleRegister}
         />
       </form>
       <p>

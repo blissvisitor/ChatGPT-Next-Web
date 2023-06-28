@@ -10,10 +10,12 @@ import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
+import LogoutIcon from "../icons/logout.svg";
+import DashboardIcon from "../icons/dashboard.svg";
 
 import Locale from "../locales";
 
-import { useAppConfig, useChatStore } from "../store";
+import { useAppConfig, useChatStore, useUserStore } from "../store";
 
 import {
   MAX_SIDEBAR_WIDTH,
@@ -23,7 +25,7 @@ import {
   REPO_URL,
 } from "../constant";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showToast } from "./ui-lib";
@@ -56,6 +58,7 @@ function useHotKey() {
 
 function useDragSideBar() {
   const limit = (x: number) => Math.min(MAX_SIDEBAR_WIDTH, x);
+  const location = useLocation();
 
   const config = useAppConfig();
   const startX = useRef(0);
@@ -94,7 +97,7 @@ function useDragSideBar() {
       : limit(config.sidebarWidth ?? 300);
     const sideBarWidth = isMobileScreen ? "100vw" : `${barWidth}px`;
     document.documentElement.style.setProperty("--sidebar-width", sideBarWidth);
-  }, [config.sidebarWidth, isMobileScreen, shouldNarrow]);
+  }, [config.sidebarWidth, isMobileScreen, shouldNarrow, location]);
 
   return {
     onDragMouseDown,
@@ -109,6 +112,15 @@ export function SideBar(props: { className?: string }) {
   const { onDragMouseDown, shouldNarrow } = useDragSideBar();
   const navigate = useNavigate();
   const config = useAppConfig();
+  const userStore = useUserStore();
+
+  const handleLogout = async (event?: React.MouseEvent<HTMLButtonElement>) => {
+    if (event) {
+      event.preventDefault();
+    }
+    userStore.logout();
+    navigate(Path.Login);
+  };
 
   useHotKey();
 
@@ -175,10 +187,26 @@ export function SideBar(props: { className?: string }) {
               <IconButton icon={<SettingsIcon />} shadow />
             </Link>
           </div>
-          <div className={styles["sidebar-action"]}>
+          {/* <div className={styles["sidebar-action"]}>
             <a href={REPO_URL} target="_blank">
               <IconButton icon={<GithubIcon />} shadow />
             </a>
+          </div> */}
+          <div className={styles["sidebar-action"]}>
+            <IconButton
+              icon={<LogoutIcon />}
+              title={Locale.LOGOUT.Title}
+              shadow
+              onClick={handleLogout}
+            />
+          </div>
+          <div className={styles["sidebar-action"]}>
+            <IconButton
+              icon={<DashboardIcon />}
+              title={Locale.DASHBOARD.Title}
+              shadow
+              onClick={() => navigate(Path.Dashboard)}
+            />
           </div>
         </div>
         <div>
