@@ -3,10 +3,11 @@ import "./styles/globals.scss";
 import "./styles/markdown.scss";
 import "./styles/highlight.scss";
 import { getClientConfig } from "./config/client";
-
+import Locale from "./locales";
+// import { Locale as LocaleType } from "./locales";
 export const metadata = {
-  title: "ChatGPT Next Web",
-  description: "Your personal ChatGPT Chat Bot.",
+  title: Locale.App.Title,
+  description: Locale.App.SubTitle,
   viewport: {
     width: "device-width",
     initialScale: 1,
@@ -17,7 +18,7 @@ export const metadata = {
     { media: "(prefers-color-scheme: dark)", color: "#151515" },
   ],
   appleWebApp: {
-    title: "ChatGPT Next Web",
+    title: Locale.App.Title,
     statusBarStyle: "default",
   },
 };

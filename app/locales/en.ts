@@ -2,6 +2,12 @@ import { SubmitKey } from "../store/config";
 import { LocaleType } from "./index";
 
 const en: LocaleType = {
+  App: {
+    Title: "DJ Intelli Assistant",
+    SubTitle: "Your Intelligent Assistant",
+    Description:
+      "ChatGPT 是一个基于 OpenAI GPT-3 的聊天机器人，你可以在这里和它聊天。",
+  },
   WIP: "Coming Soon...",
   Error: {
     Unauthorized:

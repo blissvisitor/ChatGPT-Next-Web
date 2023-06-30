@@ -1,6 +1,12 @@
 import { SubmitKey } from "../store/config";
 
 const cn = {
+  App: {
+    Title: "道纪智能助手",
+    SubTitle: "你的智能助手",
+    Description:
+      "ChatGPT 是一个基于 OpenAI GPT-3 的聊天机器人，你可以在这里和它聊天。",
+  },
   WIP: "该功能仍在开发中……",
   Error: {
     Unauthorized:
