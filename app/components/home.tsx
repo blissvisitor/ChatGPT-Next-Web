@@ -2,7 +2,7 @@
 
 require("../polyfill");
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import styles from "./home.module.scss";
 
 import BotIcon from "../icons/bot.svg";
@@ -122,7 +122,7 @@ function Screen() {
   const isDashboard = location.pathname === Path.Dashboard;
   const useStore = useUserStore();
   const isMobileScreen = useMobileScreen();
-  const isLogin = useStore?.user?.isLoggedIn;
+  const isLogin = useStore?.token;
 
   useEffect(() => {
     loadAsyncGoogleFont();

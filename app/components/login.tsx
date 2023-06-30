@@ -21,6 +21,7 @@ const LoginPage = () => {
       event.preventDefault();
     }
     if (email === "" || password === "") {
+      123;
       setMessage("Please enter your email and password");
       setTimeout(() => {
         setMessage("");
@@ -28,11 +29,13 @@ const LoginPage = () => {
       return;
     }
     try {
-      await useStore.login(email, password);
-      if (useStore.user?.isLoggedIn) {
+      const bl = await useStore.login(email, password);
+      console.log("login finish");
+      console.log(useStore.token);
+      if (bl) {
         navigate(Path.Dashboard);
       } else {
-        console.error("Login failed");
+        console.log("not login");
       }
     } catch (error) {
       console.error(error);

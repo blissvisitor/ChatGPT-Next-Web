@@ -10,7 +10,7 @@ import { IconButton } from "./button";
 
 export function Dashboard() {
   const userStore = useUserStore();
-  const isLogin = userStore?.user?.isLoggedIn;
+  const isLogin = userStore?.token;
   const user = userStore.user;
   const navigate = useNavigate();
 
