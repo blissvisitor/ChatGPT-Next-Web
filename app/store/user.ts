@@ -3,10 +3,10 @@ import { persist } from "zustand/middleware";
 import { StoreKey } from "../constant";
 import Locale from "../locales";
 // import useNavigate
-let registerUrl = "http://127.0.0.1:5000/register";
-let loginUrl = "http://127.0.0.1:5000/login";
-let logoutUrl = "http://127.0.0.1:5000/logout";
-let userinfoUrl = "http://127.0.0.1:5000/user_info";
+let registerUrl = "/chatapi/register";
+let loginUrl = "/chatapi/login";
+let logoutUrl = "/chatapi/logout";
+let userinfoUrl = "/chatapi/user_info";
 import { showToast } from "../components/ui-lib";
 import { resolve } from "path";
 
