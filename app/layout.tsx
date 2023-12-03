@@ -5,7 +5,9 @@ import "./styles/highlight.scss";
 import { getClientConfig } from "./config/client";
 import Locale from "./locales";
 // import { Locale as LocaleType } from "./locales";
-export const metadata = {
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
   title: Locale.App.Title,
   description: Locale.App.SubTitle,
   viewport: {
